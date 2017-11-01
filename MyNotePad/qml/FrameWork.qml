@@ -1,12 +1,12 @@
 import QtQuick 2.9
 import QtQuick.Layouts 1.3
-//import QtQuick.Controls 1.4
 import QtQuick.Controls 2.2
 //import QtQuick.Controls.Material 2.2
 //import QtQuick.Controls.Universal 2.2
 import Qt.labs.settings 1.0
 import Qt.labs.calendar 1.0
 import "controls"
+import "Global.js" as JS
 
 ApplicationWindow {
     id: window
@@ -15,7 +15,7 @@ ApplicationWindow {
     visible: true
     title: "My Note pad"
     Component.onCompleted: {
-
+        JS.glob.init();
     }
 
     Settings {
@@ -28,7 +28,7 @@ ApplicationWindow {
         spacing: 0
         Rectangle{
             id: leftArea
-            color: "#343740"
+            color: "#202428"
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.minimumWidth: 50
@@ -54,7 +54,7 @@ ApplicationWindow {
                         Layout.preferredHeight: parent.height
                         verticalAlignment: Text.AlignVCenter
                         color: "#FFFFFF"
-                        font.pointSize: 10
+                        font.pointSize: 14
                         text: "5月31日 周二<br>农历四月初五"
                     }
                     ToolButton{
@@ -84,12 +84,21 @@ ApplicationWindow {
                     Layout.preferredHeight: 30
                     Layout.maximumHeight: 30
                     Rectangle{
-                        color:"#2D2f37"
+                        gradient: Gradient {
+                            GradientStop {
+                                position: 0.0;
+                                color: "#80505458"
+                            }
+                            GradientStop {
+                                position: 1.0;
+                                color: "#202428"
+                            }
+                        }
                         anchors.fill: parent
                         Text {
                             anchors.fill: parent
                             verticalAlignment: Text.AlignVCenter
-                            horizontalAlignment: Text.AlignLeft
+                            horizontalAlignment: Text.AlignHCenter
                             color: "#FFFFFF"
                             font.pointSize: 13
                             font.bold: true
@@ -114,8 +123,7 @@ ApplicationWindow {
                             source: "qrc:/images/media/images/+material/back.png"
                         }
                         onClicked: {
-                            console.debug("pre month");
-                            changeMonth(-1);
+                            JS.glob.changeMonth(-1);
                         }
                     }
                     Text {
@@ -136,7 +144,7 @@ ApplicationWindow {
                         }
                         onClicked: {
                             console.debug("next month");
-                            changeMonth(1);
+                            JS.glob.changeMonth(1);
                         }
                     }
                 }
@@ -151,15 +159,50 @@ ApplicationWindow {
                         font.pointSize: 10
                         font.bold: true
                         Layout.fillWidth: true
+                        delegate: Text {
+                            text: model.shortName
+                            color: "#EEEEEE"
+                        }
                     }
 
                     MonthGrid {
                         id: grid
+                        property int curDay: new Date().getDate()
                         visible: true
                         month: Calendar.October
                         year: 2017
                         locale: Qt.locale("en_US")
-                        font.pointSize: 10
+                        font.pointSize: 12
+                        delegate: Rectangle {
+                            radius: 10
+                            color: model.day === grid.curDay ? "#87CEFA" : Qt.rgba(255,255,255,0)
+                            opacity: model.month === grid.month ? 1 : 0.5
+                            Text {
+                                anchors.fill: parent
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                                color: model.day === grid.curDay ? "#4B4B4B" : "white"
+                                font.pointSize: 10
+                                text: model.day
+                                MouseArea{
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    onEntered: {
+                                        parent.font.pointSize = 16
+                                    }
+                                    onExited: {
+                                        parent.font.pointSize = 12
+                                    }
+                                    onCanceled: {
+                                        parent.font.pointSize = 12
+                                    }
+                                    onClicked: {
+                                        grid.month = model.month
+                                        grid.curDay = model.day
+                                    }
+                                }
+                            }
+                        }
 
                         Layout.fillWidth: true
                         Layout.fillHeight: true
@@ -186,7 +229,7 @@ ApplicationWindow {
                             verticalAlignment: Text.AlignVCenter
                             horizontalAlignment: Text.AlignLeft
                             color: "#FFFFFF"
-                            font.pointSize: 10
+                            font.pointSize: 12
                             text: "Alignment Note Pad"
                         }
                     }
@@ -203,23 +246,5 @@ ApplicationWindow {
         }
     }
     //js
-    function changeMonth(def)
-    {
-        var currendMonth = grid.month + def;
-        if(currendMonth > 11)
-        {
-            grid.year += 1;
-            grid.month = Calendar.January;
-        }
-        else if(currendMonth < 0)
-        {
-            grid.year -= 1;
-            grid.month = Calendar.November;
-        }
-        else
-        {
-            grid.month = currendMonth;
-        }
-    }
 
 }

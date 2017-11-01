@@ -1,5 +1,7 @@
 *.user
 *~
+*.qmlc
+*.jsc
 build
 bin
 

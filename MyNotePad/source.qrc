@@ -40,4 +40,7 @@
         <file>images/+material/menu@4x.png</file>
         <file>images/+material/next.png</file>
     </qresource>
+    <qresource prefix="/">
+        <file>qml/Global.js</file>
+    </qresource>
 </RCC>

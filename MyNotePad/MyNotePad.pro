@@ -22,4 +22,6 @@ RESOURCES += \
 DISTFILES += \
     qml/FrameWork.qml \
     qml/PanePage1.qml \
-    qml/PanePage2.qml
+    qml/PanePage2.qml \
+    qml/Global.js \
+    qml/Global.js

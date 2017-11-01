@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("availableStyles", QQuickStyle::availableStyles());
-    engine.load(QUrl("qml/FrameWork.qml"));
+    engine.load(QUrl("../qml/FrameWork.qml"));
     if (engine.rootObjects().isEmpty())
     {
         return -1;
